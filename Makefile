@@ -2,7 +2,7 @@
 
 # Docker Compose commands using devcontainer configuration
 COMPOSE_FILE = .devcontainer/docker-compose.yml
-COMPOSE_PROJECT = teslagotchi-dev
+COMPOSE_PROJECT = teslastarter-dev
 
 # Start development services (PostgreSQL and Seq)
 dev-up:
@@ -45,8 +45,8 @@ dev-clean:
 
 # Run API with database
 api: dev-up
-	@echo "🚀 Starting Teslagotchi API..."
-	@cd src/apps/api/Teslagotchi.Api && dotnet run
+	@echo "🚀 Starting TeslaStarter API..."
+	@cd src/apps/api/TeslaStarter.Api && dotnet run
 
 # Run tests with coverage and generate reports
 coverage:
