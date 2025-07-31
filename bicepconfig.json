@@ -1,0 +1,13 @@
+{
+  "experimentalFeaturesEnabled": {
+    "symbolicNameCodegen": true
+  },
+  "moduleAliases": {
+    "br": {
+      "public": {
+        "registry": "mcr.microsoft.com",
+        "modulePath": "bicep"
+      }
+    }
+  }
+}

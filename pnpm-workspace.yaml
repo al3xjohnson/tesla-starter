@@ -1,0 +1,4 @@
+packages:
+  - 'src/apps/*'
+  - 'src/shared/typescript/api-contracts'
+  - 'tests/e2e'

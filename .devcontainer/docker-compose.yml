@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+    environment:
+      - DATABASE_CONNECTION_STRING=Host=postgres;Database=teslagotchi;Username=teslagotchi;Password=teslagotchi123!
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: teslagotchi
+      POSTGRES_PASSWORD: teslagotchi123!
+      POSTGRES_DB: teslagotchi
+    ports:
+      - "5432:5432"
+
+  seq:
+    image: datalust/seq:latest
+    restart: unless-stopped
+    volumes:
+      - seq-data:/data
+    environment:
+      ACCEPT_EULA: Y
+    ports:
+      - "5341:5341"  # Ingestion port
+      - "8081:80"    # Web UI port
+
+volumes:
+  postgres-data:
+  seq-data:

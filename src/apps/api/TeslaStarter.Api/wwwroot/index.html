@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeslaStarter - Authentication Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: #dc3545;
+            padding: 10px;
+            border: 1px solid #dc3545;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #28a745;
+            padding: 10px;
+            border: 1px solid #28a745;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        #userInfo, #usersList {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TeslaStarter Authentication Test</h1>
+        
+        <div id="authContainer">
+            <h2>Sign In with Descope</h2>
+            <div id="descope-container"></div>
+        </div>
+
+        <div id="authenticatedContainer" class="hidden">
+            <h2>Welcome! You are authenticated.</h2>
+            <button onclick="logout()">Logout</button>
+            <button onclick="getCurrentUser()">Get Current User</button>
+            <button onclick="getAllUsers()">Get All Users (Auth Required)</button>
+            
+            <div id="userInfo" class="hidden">
+                <h3>Current User Info:</h3>
+                <pre id="userInfoContent"></pre>
+            </div>
+            
+            <div id="usersList" class="hidden">
+                <h3>All Users:</h3>
+                <pre id="usersListContent"></pre>
+            </div>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <!-- Configuration -->
+    <script src="/config.js"></script>
+    
+    <!-- Descope SDK -->
+    <script src="https://unpkg.com/@descope/web-component@latest/dist/index.js"></script>
+    <script src="https://unpkg.com/@descope/web-js-sdk@latest/dist/index.umd.js"></script>
+    
+    <script>
+        // Get configuration from config.js
+        const DESCOPE_PROJECT_ID = window.TESLASTARTER_CONFIG.DESCOPE_PROJECT_ID;
+        const API_BASE_URL = window.TESLASTARTER_CONFIG.API_BASE_URL;
+        
+        // Initialize Descope
+        const sdk = Descope({ projectId: DESCOPE_PROJECT_ID });
+        
+        // Check if user is already authenticated
+        async function checkAuth() {
+            const sessionToken = sdk.getSessionToken();
+            if (sessionToken) {
+                showAuthenticatedView();
+            } else {
+                showLoginView();
+            }
+        }
+        
+        // Show login view
+        function showLoginView() {
+            document.getElementById('authContainer').classList.remove('hidden');
+            document.getElementById('authenticatedContainer').classList.add('hidden');
+            
+            // Create Descope flow component
+            const container = document.getElementById('descope-container');
+            container.innerHTML = `
+                <descope-wc 
+                    project-id="${DESCOPE_PROJECT_ID}"
+                    flow-id="sign-up-or-in"
+                    theme="light"
+                ></descope-wc>
+            `;
+            
+            // Listen for successful authentication
+            const descopeWc = document.querySelector('descope-wc');
+            descopeWc.addEventListener('success', (e) => {
+                console.log('Authentication successful:', e.detail);
+                showAuthenticatedView();
+                showMessage('Authentication successful!', 'success');
+            });
+            
+            descopeWc.addEventListener('error', (e) => {
+                console.error('Authentication error:', e.detail);
+                showMessage('Authentication failed: ' + e.detail.errorMessage, 'error');
+            });
+        }
+        
+        // Show authenticated view
+        function showAuthenticatedView() {
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('authenticatedContainer').classList.remove('hidden');
+        }
+        
+        // Logout
+        async function logout() {
+            await sdk.logout();
+            showLoginView();
+            showMessage('Logged out successfully', 'success');
+            document.getElementById('userInfo').classList.add('hidden');
+            document.getElementById('usersList').classList.add('hidden');
+        }
+        
+        // Get current user
+        async function getCurrentUser() {
+            try {
+                const sessionToken = sdk.getSessionToken();
+                if (!sessionToken) {
+                    showMessage('Not authenticated', 'error');
+                    return;
+                }
+                
+                const response = await fetch(`${API_BASE_URL}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${sessionToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const user = await response.json();
+                document.getElementById('userInfoContent').textContent = JSON.stringify(user, null, 2);
+                document.getElementById('userInfo').classList.remove('hidden');
+                showMessage('User info loaded', 'success');
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                showMessage('Error fetching user: ' + error.message, 'error');
+            }
+        }
+        
+        // Get all users
+        async function getAllUsers() {
+            try {
+                const sessionToken = sdk.getSessionToken();
+                if (!sessionToken) {
+                    showMessage('Not authenticated', 'error');
+                    return;
+                }
+                
+                const response = await fetch(`${API_BASE_URL}/auth/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${sessionToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const users = await response.json();
+                document.getElementById('usersListContent').textContent = JSON.stringify(users, null, 2);
+                document.getElementById('usersList').classList.remove('hidden');
+                showMessage(`Loaded ${users.length} users`, 'success');
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                showMessage('Error fetching users: ' + error.message, 'error');
+            }
+        }
+        
+        // Show message
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', checkAuth);
+    </script>
+</body>
+</html>

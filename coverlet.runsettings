@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Include>[Common.Domain]*,[TeslaStarter.Domain]*,[TeslaStarter.Application]*,[TeslaStarter.Infrastructure]*,[TeslaStarter.Api]*</Include>
+          <Exclude>
+            [*.Tests]*
+            [*Tests]*
+            [xunit.*]*
+            [*]*Migrations*
+            [TeslaStarter.Api]Program
+            [*]*Startup
+            [*]*.AssemblyInfo
+            [*]*.GlobalUsings
+          </Exclude>
+          <ExcludeByFile>
+            **/Migrations/**,
+            **/Program.cs
+          </ExcludeByFile>
+          <ExcludeByAttribute>
+            ExcludeFromCodeCoverageAttribute,
+            GeneratedCodeAttribute,
+            CompilerGeneratedAttribute
+          </ExcludeByAttribute>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

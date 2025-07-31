@@ -1,0 +1,4 @@
+# This file controls who can approve pull requests for specific parts of the codebase
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @al3xjohnson

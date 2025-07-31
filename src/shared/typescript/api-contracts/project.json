@@ -1,0 +1,27 @@
+{
+  "name": "api-contracts",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src/shared/typescript/api-contracts/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/shared/typescript/api-contracts",
+        "tsConfig": "src/shared/typescript/api-contracts/tsconfig.lib.json",
+        "packageJson": "src/shared/typescript/api-contracts/package.json",
+        "main": "src/shared/typescript/api-contracts/src/index.ts",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["src/shared/typescript/api-contracts/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

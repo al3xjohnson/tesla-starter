@@ -1,0 +1,31 @@
+{
+  "name": "TeslaStarter Dev Environment",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "9",
+      "additionalVersions": "8"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode.vscode-node-azure-pack",
+        "ms-vscode.powershell",
+        "ms-vscode.azurecli",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  },
+  "postCreateCommand": "dotnet restore",
+  "remoteUser": "vscode"
+}
