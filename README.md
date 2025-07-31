@@ -35,7 +35,7 @@ tesla-starter/
 
 ### Environment Setup
 
-1. **Backend Configuration** - Create `src/apps/api/TeslaStarter.Api/appsettings.local.json`:
+1. **Backend Configuration** - Create `src/apps/api/TeslaStarter.Api/appsettings.Development.json`:
 ```json
 {
   "ConnectionStrings": {
