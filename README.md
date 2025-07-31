@@ -155,8 +155,10 @@ See the Architecture Decision Records (ADRs) in the `docs/adr/` directory for de
 
 ### Vehicles
 - `GET /api/vehicles` - List user's vehicles
+- `POST /api/vehicles` - Link a new vehicle
 - `GET /api/vehicles/{id}` - Get vehicle details
-- `POST /api/vehicles/{id}/command` - Send vehicle command
+- `PUT /api/vehicles/{id}` - Update vehicle details
+- `DELETE /api/vehicles/{id}` - Unlink vehicle
 
 ## Technology Stack
 
@@ -181,5 +183,4 @@ See the Architecture Decision Records (ADRs) in the `docs/adr/` directory for de
 - Tesla tokens encrypted at rest
 - HTTPS required in production
 - CORS configured for specific origins
-- Rate limiting on API endpoints
 - Secure session management via Descope
