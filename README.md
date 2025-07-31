@@ -1,6 +1,6 @@
 # TeslaStarter
 
-A gamified companion app for Tesla owners that transforms vehicle data into an engaging virtual pet experience.
+A starting point for integrating your App with Tesla and more!
 
 ## Project Structure
 
