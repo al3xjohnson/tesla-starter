@@ -1,4 +1,4 @@
-# Claude Rules for secret-sauce
+# Claude Rules for TeslaStarter Project
 
 ## Architecture Decision Records (ADRs)
 
@@ -80,111 +80,6 @@ Remember: ADRs help future developers (including yourself) understand why certai
    }
    ```
 
-## Domain Model Conventions
-
-**Domain Events**:
-
-1. **Event file organization**:
-   - Domain events MUST be placed in an `Events` folder within the aggregate's directory
-   - Example: `/Vehicles/Events/LocationCreatedEvent.cs`
-
-2. **Event namespace convention**:
-   - Events MUST use the parent aggregate's namespace, NOT include `.Events`
-   - Correct: `namespace TeslaStarter.Domain.Vehicles;`
-   - Incorrect: `namespace TeslaStarter.Domain.Vehicles.Events;`
-
-3. **Why this matters**:
-   - Keeps events logically grouped with their aggregate
-   - Reduces namespace depth and complexity
-   - Makes imports cleaner (only need to import the aggregate namespace)
-   - Events are part of the aggregate's bounded context
-
-**Entity Framework Core Constructors**:
-
-1. **Private constructors for EF Core** in Entity and Aggregate Root classes MUST be decorated with `[ExcludeFromCodeCoverage]` attribute:
-   ```csharp
-   [ExcludeFromCodeCoverage(Justification = "Required for EF Core")]
-   private Vehicle() : base()
-   {
-       Name = default!;
-   }
-   ```
-
-2. **Why this matters**:
-   - These constructors are infrastructure concerns, not domain logic
-   - They cannot be meaningfully tested without EF Core infrastructure
-   - Including them in coverage metrics provides misleading information about actual business logic coverage
-
-3. **When to apply**:
-   - Any private parameterless constructor in an Entity or Aggregate Root
-   - Any constructor that exists solely for ORM purposes
-   - Do NOT apply to public constructors or factory methods
-
-## API Response Format Guidelines
-
-Follow Microsoft's official API response guidelines:
-
-### 1. **Use ActionResult<T> for Controller Actions**
-   - All controller actions should return `ActionResult<T>` for proper HTTP status code support
-   - This enables automatic content negotiation and proper error handling
-
-### 2. **Success Response Format**
-   - Return data directly without wrapper envelopes
-   - For single resources: return the DTO directly
-   - For collections: return arrays or lists directly
-   - Include appropriate HTTP status codes:
-     - 200 OK: Successful GET, PUT operations
-     - 201 Created: Successful POST (include Location header)
-     - 204 No Content: Successful DELETE or operations with no body
-
-### 3. **Error Response Format**
-   - Use ProblemDetails (RFC 7807) for ALL error responses
-   - Error responses must include:
-     - `type`: URI reference to error documentation
-     - `title`: Human-readable summary
-     - `status`: HTTP status code
-     - `detail`: Specific error details (optional)
-     - `instance`: URI of the specific request
-     - `traceId`: Correlation ID for debugging
-   - For validation errors, include `errors` extension with field-specific errors
-
-### 4. **Example Responses**
-
-Success Response:
-```json
-// GET /api/v1/users/123
-{
-  "id": "123",
-  "email": "user@example.com",
-  "displayName": "John Doe"
-}
-```
-
-Error Response (ProblemDetails):
-```json
-{
-  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-  "title": "One or more validation errors occurred.",
-  "status": 400,
-  "instance": "/api/v1/users",
-  "traceId": "00-trace-id-00",
-  "errors": {
-    "Email": ["The Email field is required."],
-    "DisplayName": ["Display name must be between 1 and 100 characters."]
-  }
-}
-```
-
-### 5. **Content Negotiation**
-   - Support JSON as the default format
-   - Use `[Produces("application/json")]` on controllers
-   - Error responses use `application/problem+json` content type
-
-### 6. **Implementation Notes**
-   - GlobalExceptionHandlingMiddleware handles all unhandled exceptions
-   - Model validation errors are automatically converted to ProblemDetails
-   - Custom exceptions (ValidationException, NotFoundException) are mapped to appropriate ProblemDetails responses
-
 ## Best Practices to Follow
 
 Keep commits small and focused (typically < 100 lines changed)
@@ -194,7 +89,6 @@ Follow SOLID principles and DDD patterns
 Write unit tests for new functionality (ask if unsure about test scenarios)
 Handle edge cases and errors gracefully
 Use meaningful exception types and messages
-Follow API response format guidelines (see above)
 
 Response Format
 Always maintain clear communication:
@@ -206,3 +100,9 @@ Highlight important decisions or blockers
 Explain technical concepts simply
 
 Remember: The goal is to write production-quality code while helping someone learn. Be thorough in explanations but efficient in implementation.
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
