@@ -8,18 +8,37 @@ A starting point for integrating your App with Tesla and more!
 tesla-starter/
 ├── src/
 │   ├── apps/
-│   │   ├── api/              # ASP.NET Core Web API
-│   │   └── web/              # React TypeScript Frontend
-│   ├── services/             # .NET Business Logic
-│   │   ├── TeslaStarter.Domain/
-│   │   ├── TeslaStarter.Application/
-│   │   └── TeslaStarter.Infrastructure/
+│   │   ├── api/              
+│   │   │   └── TeslaStarter.Api/         # ASP.NET Core Web API
+│   │   └── web/                          # React TypeScript Frontend
+│   ├── services/                         # .NET Business Logic
+│   │   ├── TeslaStarter.Domain/          # Domain layer (entities, value objects)
+│   │   ├── TeslaStarter.Application/     # Application layer (use cases, DTOs)
+│   │   └── TeslaStarter.Infrastructure/  # Infrastructure layer (persistence, external services)
 │   └── shared/
-│       ├── dotnet/           # Shared .NET libraries
-│       └── typescript/       # Shared TypeScript types
-├── tests/                    # All test projects
-├── docs/                     # Documentation and ADRs
-└── scripts/                  # Build and deployment scripts
+│       ├── dotnet/           
+│       │   └── Common.Domain/            # Shared domain base classes
+│       └── typescript/       
+│           └── api-contracts/            # Shared TypeScript API contracts
+├── tests/                                # All test projects
+│   ├── api/
+│   │   └── TeslaStarter.Api.Tests/
+│   ├── services/
+│   │   ├── TeslaStarter.Application.Tests/
+│   │   ├── TeslaStarter.Domain.Tests/
+│   │   └── TeslaStarter.Infrastructure.Tests/
+│   └── shared/
+│       └── dotnet/
+│           └── Common.Domain.Tests/
+├── docs/                                 # Documentation
+│   ├── adr/                             # Architecture Decision Records
+│   └── prd/                             # Product Requirements Documents
+├── infra/                               # Infrastructure code
+│   ├── bicep/                           # Azure Bicep templates
+│   └── scripts/                         # Deployment scripts
+├── .github/                             # GitHub workflows and actions
+├── .vscode/                             # VS Code configuration
+└── .devcontainer/                       # Dev container configuration
 ```
 
 ## Prerequisites
