@@ -25,6 +25,36 @@ When making important architecture decisions in this codebase, you should:
 
 Remember: ADRs help future developers (including yourself) understand why certain choices were made.
 
+## Product Requirements Documents (PRDs)
+
+When working on new features or significant functionality in this codebase, you should:
+
+1. **Create a new PRD** in `docs/prd/` whenever you:
+   - Plan a new major feature or module
+   - Define user-facing functionality that spans multiple components
+   - Design complex workflows or user journeys
+   - Establish product requirements before implementation
+   - Need to document acceptance criteria and success metrics
+
+2. **PRD Format**:
+   - Use descriptive names (e.g., `authentication-prd.md`, `vehicle-domain-prd.md`)
+   - Follow the template established in existing PRDs
+   - Include: Executive Summary, Goals and Objectives, User Stories, Functional Requirements, Technical Requirements, Non-Functional Requirements, UI Requirements, Implementation Phases, Dependencies, Risks and Mitigations, Success Criteria
+
+3. **When to create a PRD**:
+   - Before starting implementation of a major feature
+   - When multiple stakeholders need alignment on requirements
+   - If the feature involves complex user interactions
+   - When success metrics and acceptance criteria need to be defined
+   - For features that will evolve through multiple phases
+
+4. **Existing PRDs** to reference:
+   - `authentication-prd.md` - Authentication and Tesla account integration
+   - `user-domain-prd.md` - User management functionality
+   - `vehicle-domain-prd.md` - Vehicle data and management features
+
+Remember: PRDs help ensure features are built to meet user needs and business objectives, not just technical requirements.
+
 ## Code Style and Formatting
 
 **IMPORTANT**: Before completing any task, you MUST:
