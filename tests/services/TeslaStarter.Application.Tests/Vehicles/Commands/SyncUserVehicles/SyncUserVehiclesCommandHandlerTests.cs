@@ -13,7 +13,6 @@ using Xunit;
 
 namespace TeslaStarter.Application.Tests.Vehicles.Commands.SyncUserVehicles;
 
-[ExcludeFromCodeCoverage(Justification = "Test class")]
 public sealed class SyncUserVehiclesCommandHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock;

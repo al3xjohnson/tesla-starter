@@ -9,7 +9,6 @@ using Xunit;
 
 namespace TeslaStarter.Application.Tests.Users.Commands.UpdateUserTeslaTokens;
 
-[ExcludeFromCodeCoverage(Justification = "Test class")]
 public sealed class UpdateUserTeslaTokensCommandHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock;

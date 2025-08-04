@@ -5,7 +5,6 @@ using Xunit;
 
 namespace TeslaStarter.Application.Tests.Vehicles.Commands.SyncUserVehicles;
 
-[ExcludeFromCodeCoverage(Justification = "Test class")]
 public sealed class SyncUserVehiclesCommandTests
 {
     [Fact]

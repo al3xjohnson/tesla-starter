@@ -9,7 +9,6 @@ using Xunit;
 
 namespace TeslaStarter.Infrastructure.Tests.Authentication;
 
-[ExcludeFromCodeCoverage(Justification = "Test class")]
 public sealed class UserSynchronizationServiceTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock;

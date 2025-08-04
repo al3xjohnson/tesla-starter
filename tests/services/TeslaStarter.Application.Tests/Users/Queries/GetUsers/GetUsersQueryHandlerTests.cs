@@ -10,7 +10,6 @@ using Xunit;
 
 namespace TeslaStarter.Application.Tests.Users.Queries.GetUsers;
 
-[ExcludeFromCodeCoverage(Justification = "Test class")]
 public sealed class GetUsersQueryHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock;

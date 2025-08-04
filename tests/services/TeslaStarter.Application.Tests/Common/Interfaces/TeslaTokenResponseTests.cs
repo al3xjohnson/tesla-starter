@@ -5,7 +5,6 @@ using Xunit;
 
 namespace TeslaStarter.Application.Tests.Common.Interfaces;
 
-[ExcludeFromCodeCoverage(Justification = "Test class")]
 public sealed class TeslaTokenResponseTests
 {
     [Fact]
