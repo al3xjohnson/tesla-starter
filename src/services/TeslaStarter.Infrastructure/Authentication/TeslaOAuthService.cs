@@ -19,6 +19,7 @@ public class TeslaOAuthService(
     private readonly ILogger<TeslaOAuthService> _logger = logger;
 
     private const string TeslaAuthBaseUrl = "https://fleet-auth.prd.vn.cloud.tesla.com";
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
     public string GenerateAuthorizationUrl(string state)
     {
@@ -61,18 +62,18 @@ public class TeslaOAuthService(
             }
 
             string json = await response.Content.ReadAsStringAsync();
-            Dictionary<string, JsonElement>? tokenResponse = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+            TeslaTokenDto? dto = JsonSerializer.Deserialize<TeslaTokenDto>(json, JsonOptions);
 
-            if (tokenResponse == null)
+            if (dto == null)
                 return null;
 
             return new TeslaTokenResponse
             {
-                AccessToken = tokenResponse.GetValueOrDefault("access_token").GetString() ?? "",
-                RefreshToken = tokenResponse.GetValueOrDefault("refresh_token").GetString() ?? "",
-                IdToken = tokenResponse.GetValueOrDefault("id_token").GetString() ?? "",
-                TokenType = tokenResponse.GetValueOrDefault("token_type").GetString() ?? "Bearer",
-                ExpiresIn = tokenResponse.GetValueOrDefault("expires_in").TryGetInt32(out int exp) ? exp : 3600
+                AccessToken = dto.AccessToken ?? "",
+                RefreshToken = dto.RefreshToken ?? "",
+                IdToken = dto.IdToken ?? "",
+                TokenType = dto.TokenType ?? "Bearer",
+                ExpiresIn = dto.ExpiresIn ?? 3600
             };
         }
         catch (Exception ex)
@@ -110,18 +111,18 @@ public class TeslaOAuthService(
             }
 
             string json = await response.Content.ReadAsStringAsync();
-            Dictionary<string, JsonElement>? tokenResponse = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+            TeslaTokenDto? dto = JsonSerializer.Deserialize<TeslaTokenDto>(json, JsonOptions);
 
-            if (tokenResponse == null)
+            if (dto == null)
                 return null;
 
             return new TeslaTokenResponse
             {
-                AccessToken = tokenResponse.GetValueOrDefault("access_token").GetString() ?? "",
-                RefreshToken = tokenResponse.GetValueOrDefault("refresh_token").GetString() ?? "",
-                IdToken = tokenResponse.GetValueOrDefault("id_token").GetString() ?? "",
-                TokenType = tokenResponse.GetValueOrDefault("token_type").GetString() ?? "Bearer",
-                ExpiresIn = tokenResponse.GetValueOrDefault("expires_in").TryGetInt32(out int exp) ? exp : 3600
+                AccessToken = dto.AccessToken ?? "",
+                RefreshToken = dto.RefreshToken ?? "",
+                IdToken = dto.IdToken ?? "",
+                TokenType = dto.TokenType ?? "Bearer",
+                ExpiresIn = dto.ExpiresIn ?? 3600
             };
         }
         catch (Exception ex)
