@@ -14,6 +14,7 @@ using TeslaStarter.Application.Vehicles.DTOs;
 using TeslaStarter.Application.Vehicles.Queries.GetVehiclesByTeslaAccount;
 using TeslaStarter.Domain.Users;
 using TeslaStarter.Infrastructure.Authentication;
+using TeslaStarter.Api.Extensions;
 
 namespace TeslaStarter.Api.Controllers;
 
@@ -37,7 +38,7 @@ public class AuthController(
     [Authorize]
     public async Task<IActionResult> GetCurrentUser()
     {
-        string? descopeUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        string? descopeUserId = User.GetDescopeUserId();
         if (string.IsNullOrEmpty(descopeUserId))
             return Unauthorized();
 
@@ -67,7 +68,7 @@ public class AuthController(
     [Authorize]
     public IActionResult InitiateTeslaAuth()
     {
-        string? descopeUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        string? descopeUserId = User.GetDescopeUserId();
         if (string.IsNullOrEmpty(descopeUserId))
             return Unauthorized();
 
@@ -96,7 +97,7 @@ public class AuthController(
     [Authorize]
     public async Task<IActionResult> HandleTeslaCallback([FromBody] TeslaCallbackRequest request)
     {
-        string? descopeUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        string? descopeUserId = User.GetDescopeUserId();
         if (string.IsNullOrEmpty(descopeUserId))
             return Unauthorized();
 
@@ -175,7 +176,7 @@ public class AuthController(
     [Authorize]
     public async Task<IActionResult> RefreshTeslaTokens()
     {
-        string? descopeUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        string? descopeUserId = User.GetDescopeUserId();
         if (string.IsNullOrEmpty(descopeUserId))
             return Unauthorized();
 
@@ -220,7 +221,7 @@ public class AuthController(
     [Authorize]
     public async Task<IActionResult> UnlinkTeslaAccount()
     {
-        string? descopeUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        string? descopeUserId = User.GetDescopeUserId();
         if (string.IsNullOrEmpty(descopeUserId))
             return Unauthorized();
 
@@ -269,7 +270,7 @@ public class AuthController(
     [Authorize]
     public async Task<IActionResult> GetMyVehicles()
     {
-        string? descopeUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        string? descopeUserId = User.GetDescopeUserId();
         if (string.IsNullOrEmpty(descopeUserId))
             return Unauthorized();
 
@@ -295,7 +296,7 @@ public class AuthController(
     [Authorize]
     public async Task<IActionResult> SyncVehicles()
     {
-        string? descopeUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        string? descopeUserId = User.GetDescopeUserId();
         if (string.IsNullOrEmpty(descopeUserId))
             return Unauthorized();
 
