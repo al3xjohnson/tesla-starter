@@ -4,7 +4,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using TeslaStarter.Domain.Users;
-using TeslaStarter.Domain.Users.Events;
 using TeslaStarter.Infrastructure.Persistence;
 using Xunit;
 

@@ -1,4 +1,4 @@
-namespace TeslaStarter.Domain.Users.Events;
+namespace TeslaStarter.Domain.Users;
 
 public sealed record TeslaAccountLinkedDomainEvent(
     UserId UserId,
