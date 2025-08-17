@@ -9,14 +9,18 @@ public sealed class UpdateProfileCommandHandler(
     IMapper mapper,
     ILogger<UpdateProfileCommandHandler> logger) : IRequestHandler<UpdateProfileCommand, UserDto>
 {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IMapper _mapper = mapper;
+    private readonly ILogger<UpdateProfileCommandHandler> _logger = logger;
     public async Task<UserDto> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
-        User user = await userRepository.GetByIdAsync(
+        User user = await _userRepository.GetByIdAsync(
             new UserId(request.UserId),
             cancellationToken) ?? throw new NotFoundException(nameof(User), request.UserId);
 
         // Check if another user already has this email
-        User? existingUserWithEmail = await userRepository.GetByEmailAsync(
+        User? existingUserWithEmail = await _userRepository.GetByEmailAsync(
             Email.Create(request.Email),
             cancellationToken);
 
@@ -31,11 +35,11 @@ public sealed class UpdateProfileCommandHandler(
 
         user.UpdateProfile(request.Email, request.DisplayName);
 
-        userRepository.Update(user);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        _userRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Updated profile for user {UserId}", user.Id.Value);
+        _logger.LogInformation("Updated profile for user {UserId}", user.Id.Value);
 
-        return mapper.Map<UserDto>(user);
+        return _mapper.Map<UserDto>(user);
     }
 }

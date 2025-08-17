@@ -5,14 +5,14 @@ using TeslaStarter.Application.Common.Interfaces;
 
 namespace TeslaStarter.Infrastructure.Security;
 
-public class EncryptionService : IEncryptionService
+public class EncryptionService(IConfiguration configuration) : IEncryptionService
 {
-    private readonly byte[] _key;
+    private readonly byte[] _key = GetKeyBytes(GetKeyString(configuration));
     private const string EncryptionKeyName = "Encryption:Key";
 
-    public EncryptionService(IConfiguration configuration)
+    private static string GetKeyString(IConfiguration configuration)
     {
-        var keyString = configuration[EncryptionKeyName];
+        string? keyString = configuration[EncryptionKeyName];
 
         // For design-time scenarios (migrations), use a placeholder key
         if (string.IsNullOrEmpty(keyString))
@@ -20,8 +20,7 @@ public class EncryptionService : IEncryptionService
             keyString = "DESIGN_TIME_PLACEHOLDER_KEY_DO_NOT_USE_IN_PRODUCTION";
         }
 
-        // Ensure key is exactly 32 bytes (256 bits) for AES-256
-        _key = GetKeyBytes(keyString);
+        return keyString;
     }
 
     public string? Encrypt(string? plainText)

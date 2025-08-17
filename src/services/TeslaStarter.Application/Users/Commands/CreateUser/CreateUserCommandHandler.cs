@@ -8,10 +8,15 @@ public sealed class CreateUserCommandHandler(
     IMapper mapper,
     ILogger<CreateUserCommandHandler> logger) : IRequestHandler<CreateUserCommand, UserDto>
 {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IMapper _mapper = mapper;
+    private readonly ILogger<CreateUserCommandHandler> _logger = logger;
+
     public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         // Check if user already exists with external ID
-        User? existingUserByExternalId = await userRepository.GetByExternalIdAsync(
+        User? existingUserByExternalId = await _userRepository.GetByExternalIdAsync(
             ExternalId.Create(request.ExternalId),
             cancellationToken);
 
@@ -25,7 +30,7 @@ public sealed class CreateUserCommandHandler(
         }
 
         // Check if user already exists with email
-        User? existingUserByEmail = await userRepository.GetByEmailAsync(
+        User? existingUserByEmail = await _userRepository.GetByEmailAsync(
             Email.Create(request.Email),
             cancellationToken);
 
@@ -44,13 +49,13 @@ public sealed class CreateUserCommandHandler(
             request.Email,
             request.DisplayName);
 
-        userRepository.Add(user);
+        _userRepository.Add(user);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Created user {UserId} with external ID {ExternalId}",
+        _logger.LogInformation("Created user {UserId} with external ID {ExternalId}",
             user.Id.Value, user.ExternalId.Value);
 
-        return mapper.Map<UserDto>(user);
+        return _mapper.Map<UserDto>(user);
     }
 }

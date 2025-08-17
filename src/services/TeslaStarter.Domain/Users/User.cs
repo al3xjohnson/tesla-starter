@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Common.Domain.Base;
-using TeslaStarter.Domain.Users.Events;
 
 namespace TeslaStarter.Domain.Users;
 
