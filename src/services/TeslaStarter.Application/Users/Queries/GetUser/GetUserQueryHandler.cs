@@ -7,12 +7,14 @@ public sealed class GetUserQueryHandler(
     IUserRepository userRepository,
     IMapper mapper) : IRequestHandler<GetUserQuery, UserDto>
 {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IMapper _mapper = mapper;
     public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        User user = await userRepository.GetByIdAsync(
+        User user = await _userRepository.GetByIdAsync(
             new UserId(request.UserId),
             cancellationToken) ?? throw new NotFoundException(nameof(User), request.UserId);
 
-        return mapper.Map<UserDto>(user);
+        return _mapper.Map<UserDto>(user);
     }
 }

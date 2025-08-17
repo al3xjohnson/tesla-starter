@@ -7,12 +7,14 @@ public sealed class GetVehicleQueryHandler(
     IVehicleRepository vehicleRepository,
     IMapper mapper) : IRequestHandler<GetVehicleQuery, VehicleDto>
 {
+    private readonly IVehicleRepository _vehicleRepository = vehicleRepository;
+    private readonly IMapper _mapper = mapper;
     public async Task<VehicleDto> Handle(GetVehicleQuery request, CancellationToken cancellationToken)
     {
-        Vehicle vehicle = await vehicleRepository.GetByIdAsync(
+        Vehicle vehicle = await _vehicleRepository.GetByIdAsync(
             new VehicleId(request.VehicleId),
             cancellationToken) ?? throw new NotFoundException(nameof(Vehicle), request.VehicleId);
 
-        return mapper.Map<VehicleDto>(vehicle);
+        return _mapper.Map<VehicleDto>(vehicle);
     }
 }

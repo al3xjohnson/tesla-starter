@@ -7,9 +7,12 @@ public sealed class UnlinkVehicleCommandHandler(
     IUnitOfWork unitOfWork,
     ILogger<UnlinkVehicleCommandHandler> logger) : IRequestHandler<UnlinkVehicleCommand>
 {
+    private readonly IVehicleRepository _vehicleRepository = vehicleRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly ILogger<UnlinkVehicleCommandHandler> _logger = logger;
     public async Task Handle(UnlinkVehicleCommand request, CancellationToken cancellationToken)
     {
-        Vehicle? vehicle = await vehicleRepository.GetByIdAsync(
+        Vehicle? vehicle = await _vehicleRepository.GetByIdAsync(
             new VehicleId(request.VehicleId),
             cancellationToken) ?? throw new NotFoundException(nameof(Vehicle), request.VehicleId);
 
@@ -22,9 +25,9 @@ public sealed class UnlinkVehicleCommandHandler(
             // Vehicle is already inactive, which is fine - operation is idempotent
         }
 
-        vehicleRepository.Update(vehicle);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        _vehicleRepository.Update(vehicle);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Unlinked vehicle {VehicleId}", vehicle.Id.Value);
+        _logger.LogInformation("Unlinked vehicle {VehicleId}", vehicle.Id.Value);
     }
 }

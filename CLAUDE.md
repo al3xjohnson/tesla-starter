@@ -75,6 +75,45 @@ Remember: PRDs help ensure features are built to meet user needs and business ob
    - Remove any un-needed whitespace
    - Simplify collection initializations where possible
 
+## Dependency Injection Pattern
+
+**IMPORTANT**: All services, handlers, and classes using dependency injection MUST follow this pattern:
+
+1. **Use primary constructors** for dependency injection
+2. **Create private readonly fields** for ALL injected dependencies
+3. **Prefix fields with underscore** (e.g., `_userRepository`, `_logger`)
+4. **Initialize fields from constructor parameters**
+
+Example:
+```csharp
+public class SomeService(
+    IUserRepository userRepository,
+    IUnitOfWork unitOfWork,
+    IMapper mapper,
+    ILogger<SomeService> logger) : ISomeService
+{
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IMapper _mapper = mapper;
+    private readonly ILogger<SomeService> _logger = logger;
+
+    public async Task DoSomething()
+    {
+        // Use _userRepository, _unitOfWork, etc. (NOT userRepository)
+        User? user = await _userRepository.GetByIdAsync(id);
+        _logger.LogInformation("Did something");
+    }
+}
+```
+
+This pattern applies to:
+- All service implementations (IUserService, ITeslaApiService, etc.)
+- All MediatR command and query handlers
+- All authentication handlers
+- Any class using constructor dependency injection
+
+**Never** use constructor parameters directly in methods - always use the private readonly fields.
+
 4. **Modern C# patterns**:
    - **Use expression-bodied members** for methods/properties that can be expressed as a single expression
    - **Formatting**: Place `=>` on the same line as the method signature

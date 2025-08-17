@@ -9,9 +9,13 @@ public sealed class UnlinkTeslaAccountCommandHandler(
     IMapper mapper,
     ILogger<UnlinkTeslaAccountCommandHandler> logger) : IRequestHandler<UnlinkTeslaAccountCommand, UserDto>
 {
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IMapper _mapper = mapper;
+    private readonly ILogger<UnlinkTeslaAccountCommandHandler> _logger = logger;
     public async Task<UserDto> Handle(UnlinkTeslaAccountCommand request, CancellationToken cancellationToken)
     {
-        User user = await userRepository.GetByIdAsync(
+        User user = await _userRepository.GetByIdAsync(
             new UserId(request.UserId),
             cancellationToken) ?? throw new NotFoundException(nameof(User), request.UserId);
 
@@ -28,11 +32,11 @@ public sealed class UnlinkTeslaAccountCommandHandler(
             ]);
         }
 
-        userRepository.Update(user);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        _userRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Unlinked Tesla account from user {UserId}", user.Id.Value);
+        _logger.LogInformation("Unlinked Tesla account from user {UserId}", user.Id.Value);
 
-        return mapper.Map<UserDto>(user);
+        return _mapper.Map<UserDto>(user);
     }
 }
