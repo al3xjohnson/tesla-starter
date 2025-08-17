@@ -3,7 +3,6 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using TeslaStarter.Application.Common.Interfaces;
-using TeslaStarter.Domain.Users;
 
 namespace TeslaStarter.Api.Authentication;
 
@@ -40,7 +39,6 @@ internal sealed class DescopeAuthenticationHandler(
             // Create a scope for resolving scoped services
             using IServiceScope scope = _serviceProvider.CreateScope();
             IDescopeAuthService descopeAuthService = scope.ServiceProvider.GetRequiredService<IDescopeAuthService>();
-            IUserRepository? userRepository = scope.ServiceProvider.GetService<IUserRepository>();
 
             // Validate token and get session result with tenants
             DescopeSessionResult? sessionResult = await descopeAuthService.ValidateSessionAsync(token);
